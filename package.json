@@ -1,6 +1,6 @@
 {
-  "name": "babel-plugin-react-magicd",
-  "version": "0.0.5",
+  "name": "babel-plugin-magicd",
+  "version": "0.0.6",
   "description": "a magic konjac",
   "repository": "jason/babel-plugin-magic-d",
   "author": "jason <>",
@@ -25,7 +25,6 @@
     "babel-plugin"
   ],
   "dependencies": {
-    "babel-plugin-syntax-jsx": "^6.18.0",
     "lodash": "^4.17.10",
     "mkdirp": "^0.5.1"
   }

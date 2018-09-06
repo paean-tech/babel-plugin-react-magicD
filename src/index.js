@@ -12,6 +12,7 @@ function referencesImport(path, mod, importedNames) {
 
 export default function({types: t }) {
   return {
+    inherits: require("babel-plugin-syntax-jsx"),
     pre (state) {
       this.opts = {
         moduleSourceName: get(state, 'opts.moduleSourceName', 'i18next' ),
@@ -60,7 +61,7 @@ export default function({types: t }) {
         }
         let newTranslations = merge({}, )
         newTranslations = mapKeys(existedTranslations, (v, k) => {
-          const nk = k.replace(new RegExp(this.opts.dirtyPrefix, 'gm'), '')
+          const nk = k.replace(new RegExp('^' + this.opts.dirtyPrefix), '')
           if(!has(this.translations, nk)) {
             return this.opts.dirtyPrefix + nk
           } else {
