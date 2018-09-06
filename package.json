@@ -25,6 +25,7 @@
     "babel-plugin"
   ],
   "dependencies": {
+    "lodash": "^4.17.10",
     "mkdirp": "^0.5.1"
   }
 }
