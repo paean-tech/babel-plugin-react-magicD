@@ -1,4 +1,5 @@
 {
+  "name": "babel-plugin-react-magicD",
   "version": "0.0.1",
   "description": "a magic konjac",
   "repository": "jason/babel-plugin-magic-d",
