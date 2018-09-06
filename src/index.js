@@ -64,7 +64,7 @@ export default function({types: t }) {
           if(!has(this.translations, nk)) {
             return this.opts.dirtyPrefix + nk
           } else {
-            return nkk
+            return nk
           }
         })
         forEach(this.translations, (v, k) => {
