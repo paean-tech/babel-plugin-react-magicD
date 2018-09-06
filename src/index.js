@@ -12,7 +12,6 @@ function referencesImport(path, mod, importedNames) {
 
 export default function({types: t }) {
   return {
-    inherits: require("babel-plugin-syntax-jsx"),
     pre (state) {
       this.opts = {
         moduleSourceName: get(state, 'opts.moduleSourceName', 'i18next' ),
