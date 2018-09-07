@@ -66,7 +66,7 @@ export default function({types: t }) {
         if (exist) {
           existedTranslations = JSON.parse(readFileSync(dest))
         }
-        let newTranslations = merge({}, )
+        let newTranslations = {}
         newTranslations = mapKeys(existedTranslations, (v, k) => {
           const nk = k.replace(new RegExp('^' + opts.dirtyPrefix), '')
           if(!has(this.translations, nk)) {
