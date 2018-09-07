@@ -6,7 +6,7 @@ t('gogogo')
 
 t("{a} sb niubi")
 
-t("{a} nnn")
+// t("{a} nnn")
 
 t("a pig")
 
