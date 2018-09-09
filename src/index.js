@@ -12,7 +12,7 @@ function referencesImport(path, mod, importedNames) {
 
 function getOptions (state) {
   return getOptions.opts = (getOptions.opts || {
-    moduleSourceName: get(state, 'opts.moduleSourceName', './i18next'),
+    moduleSourceName: get(state, 'opts.moduleSourceName', 'i18next'),
     format: {
       funcList: get(state, 'opts.format.funcList', ['t']),
     },
