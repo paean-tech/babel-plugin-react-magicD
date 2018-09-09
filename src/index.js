@@ -1,4 +1,4 @@
-const { chain, get, template, forEach, some, mapKeys, reduce, merge, has, startsWith, pickBy, omit, keys } = require('lodash')
+const { chain, get, template, forEach, some, mapKeys, reduce, merge, has, startsWith, pickBy, omit, keys, pick } = require('lodash')
 const { readFileSync, existsSync, writeFileSync } = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
@@ -12,11 +12,11 @@ function referencesImport(path, mod, importedNames) {
 
 function getOptions (state) {
   return getOptions.opts = (getOptions.opts || {
-    moduleSourceName: get(state, 'opts.moduleSourceName', 'i18next' ),
+    moduleSourceName: get(state, 'opts.moduleSourceName', './i18next'),
     format: {
       funcList: get(state, 'opts.format.funcList', ['t']),
-      componentList: get(state, 'opts.format.componentList', ['MD']),
     },
+    removeUnusedKey: get(state, 'opts.removeUnusedKey', false),
     dirtyPrefix: get(state, 'opts.dirtyPrefix', '~'),
     sort: get(state, 'opts.sort', true),
     lngs: get(state, 'opts.lngs', ['zh-CN', 'en-US']),
@@ -24,7 +24,7 @@ function getOptions (state) {
     defaultVal: get(state, 'opts.defaultVal', ''),
     keySeparator: get(state, 'opts.keySeparator', '.'),
     interpolate:  get(state, 'opts.interpolate', /{{([\s\S]+?)}}/g),
-    dest: get(state, 'opts.dest', './i18n/{{lng}}/{{ns}}.json')
+    dest: get(state, 'opts.dest', './i18n/{{lng}}/{{ns}}.json'),
   })
 }
 
@@ -35,15 +35,6 @@ export default function({types: t }) {
       this.translations = {}
     },
     visitor: {
-      JSXOpeningElement (path, state) {
-        const opts = getOptions(state)
-        if (referencesImport(path.get('name'), opts.moduleSourceName, opts.format.componentList)) {
-          const attributes = path.get('attributes')
-            .filter((attr) => attr.isJSXAttribute())
-          const prop = attributes.find(attr => attr.get('name').node.name === 'key')
-          this.translations[prop.get('value').node.value] = opts.defaultVal
-        }
-      },
       CallExpression (path, state) {
         const opts = getOptions(state)
         if (referencesImport(path.get('callee'), opts.moduleSourceName, opts.format.funcList)){
@@ -64,22 +55,27 @@ export default function({types: t }) {
         const exist = existsSync(dest)
         let existedTranslations = {}
         if (exist) {
-          existedTranslations = JSON.parse(readFileSync(dest))
+          try {
+            existedTranslations = JSON.parse(readFileSync(dest))
+          } catch (e) {}
         }
-        let newTranslations = {}
+        let newTranslations = { ...existedTranslations }
         newTranslations = mapKeys(existedTranslations, (v, k) => {
-          const nk = k.replace(new RegExp('^' + opts.dirtyPrefix), '')
-          if(!has(this.translations, nk)) {
-            return opts.dirtyPrefix + nk
-          } else {
+          if (opts.removeUnusedKey === false) {
+            const nk = k.replace(new RegExp('^' + opts.dirtyPrefix), '')
+            if (!has(this.translations, nk)) {
+              return opts.dirtyPrefix + nk
+            }
             return nk
           }
+          return k
         })
         forEach(this.translations, (v, k) => {
           if (newTranslations[k] == undefined) {
             newTranslations[k] = v
           }
         })
+        if (opts.removeUnusedKey === true) newTranslations = pick(newTranslations, keys(this.translations))
         if (opts.sort === true) {
           newTranslations = chain(newTranslations).toPairs().sortBy(0).fromPairs().value()
         }

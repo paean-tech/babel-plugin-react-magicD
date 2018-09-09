@@ -1,7 +1,7 @@
 {
   "plugins": [
     ["../../../src", {
-      dest: './jj/{{lng}}/{{ns}}.json',
+      dest: './i18n/{{lng}}.json',
     }]
   ]
 }
