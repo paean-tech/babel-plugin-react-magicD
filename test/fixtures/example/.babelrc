@@ -3,6 +3,7 @@
   "plugins": [
     ["../../../src", {
       dest: './i18n/{{lng}}.json',
+      sort: false,
     }]
   ]
 }
