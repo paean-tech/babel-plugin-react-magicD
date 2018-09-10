@@ -71,7 +71,7 @@ function save(existedTranslations, dest, translations, opts) {
 export default function({types: t }) {
   return {
     pre (state) {
-      this.translations = {}
+      this.translations = this.newTranslations || {}
     },
     visitor: {
       CallExpression (path, state) {
@@ -98,8 +98,9 @@ export default function({types: t }) {
             const diffSymbol = line.added === true ? '+' : '-'
             console.log(chalk.keyword(color)(path + '\n' + diffSymbol + line.value))
             path = ''
-          }
+         }
         })
+        this.translations = { ...newTranslations }
       })
     }
   }
