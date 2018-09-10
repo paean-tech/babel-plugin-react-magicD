@@ -1,9 +1,9 @@
 {
   "name": "babel-plugin-magicd",
-  "version": "0.0.17",
+  "version": "1.0.0",
   "description": "a magic konjac",
   "repository": "jason/babel-plugin-magic-d",
-  "author": "jason <>",
+  "author": "jason",
   "main": "lib/index.js",
   "devDependencies": {
     "babel-cli": "^6.4.5",
