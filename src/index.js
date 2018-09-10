@@ -90,14 +90,13 @@ export default function({types: t }) {
         return [lng, path.join(cwd, path.relative(cwd, template(opts.dest, { interpolate: opts.interpolate })({ lng, ns: opts.ns })))]
       }).forEach(([lng, path]) => {
         const oldTrans = existTranslationsFile(path)
-        console.log(lng, path, this.locales[lng])
         const newTranslations = save(oldTrans, path, this.locales[lng], opts)
         const diffLines = diff.diffJson(oldTrans, newTranslations)
         diffLines.forEach(line => {
           if (line.value != null && line.added != null || line.removed != null) {
             const color = line.added === true ? 'green' : 'red'
             const diffSymbol = line.added === true ? '+' : '-'
-            console.log(chalk.keyword(color)(path + '\n' + diffSymbol + line.value))
+            console.log(chalk.keyword(color)(path + '\n' + diffSymbol + ' ' + line.value))
             path = ''
          }
         })
