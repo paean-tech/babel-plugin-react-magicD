@@ -71,7 +71,8 @@ function save(existedTranslations, dest, translations, opts) {
 export default function({types: t }) {
   return {
     pre (state) {
-      this.translations = this.translations || {}
+      console.log('pre')
+      this.translations = {}
     },
     visitor: {
       CallExpression (path, state) {
@@ -100,8 +101,8 @@ export default function({types: t }) {
             path = ''
          }
         })
-        this.translations = { ...newTranslations }
       })
+      console.log('post')
     }
   }
 }

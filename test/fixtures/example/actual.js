@@ -8,7 +8,8 @@ t("{a} sb niubi")
 
 loadLocale(getLocale()).then(() => {
   console.log(t('nn我不捕鱼u'))
-  app.start('#root')
+  // app.start('#root')
+  // console.log(t('hhh'))
 })
 
 // t("a pig")
