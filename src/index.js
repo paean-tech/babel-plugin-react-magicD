@@ -1,4 +1,4 @@
-const { chain, get, template, forEach, some, mapKeys, reduce, merge, has, startsWith, pickBy, omit, keys, pick } = require('lodash')
+const { chain, get, set, template, forEach, some, mapKeys, reduce, merge, has, startsWith, pickBy, omit, keys, pick } = require('lodash')
 const { readFileSync, existsSync, writeFileSync } = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
@@ -71,8 +71,7 @@ function save(existedTranslations, dest, translations, opts) {
 export default function({types: t }) {
   return {
     pre (state) {
-      console.log('pre')
-      this.translations = {}
+      this.locales = this.locales || {}
     },
     visitor: {
       CallExpression (path, state) {
@@ -80,7 +79,7 @@ export default function({types: t }) {
         if (referencesImport(path.get('callee'), opts.moduleSourceName, opts.format.funcList)){
           const args = path.get('arguments')
           if (!t.isStringLiteral(args[0])) return
-          this.translations[args[0].node.value] = opts.defaultVal
+          opts.lngs.forEach(lng => set(this.locales, `['${lng}']['${args[0].node.value}']`, opts.defaultVal))
         }
       }
     },
@@ -88,10 +87,11 @@ export default function({types: t }) {
       const opts = getOptions()
       const cwd = process.cwd()
       opts.lngs.map(lng => {
-        return path.join(cwd, path.relative(cwd, template(opts.dest, { interpolate: opts.interpolate })({ lng, ns: opts.ns })))
-      }).forEach(path => {
+        return [lng, path.join(cwd, path.relative(cwd, template(opts.dest, { interpolate: opts.interpolate })({ lng, ns: opts.ns })))]
+      }).forEach(([lng, path]) => {
         const oldTrans = existTranslationsFile(path)
-        const newTranslations = save(oldTrans, path, this.translations, opts)
+        console.log(lng, path, this.locales[lng])
+        const newTranslations = save(oldTrans, path, this.locales[lng], opts)
         const diffLines = diff.diffJson(oldTrans, newTranslations)
         diffLines.forEach(line => {
           if (line.value != null && line.added != null || line.removed != null) {
@@ -101,8 +101,8 @@ export default function({types: t }) {
             path = ''
          }
         })
+        this.locales[lng] = newTranslations
       })
-      console.log('post')
     }
   }
 }
