@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-magicd",
-  "newTranslationsversion": "0.0.16",
+  "version": "0.0.16",
   "description": "a magic konjac",
   "repository": "jason/babel-plugin-magic-d",
   "author": "jason <>",
